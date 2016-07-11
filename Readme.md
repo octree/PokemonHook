@@ -10,4 +10,8 @@ __文章推出收到了 Ingress 的玩家炮轰，本身我就是技术交流的
 - 用 codesign / fastlane / iresign 等工具重新签名
 - iTunes / iTools / Xcode 安装 ipa，推荐用 Xcode 安装，大多数安装失败会提示原因。
 
+#Octree Add
+##增加了控制器
 
+- 宅在家里懒得出去，于是增加了一个控制器，控制玩家行走。
+- 还写加了点代码可以自动行走孵化蛋蛋，不过代码没推上来。
