@@ -10,6 +10,10 @@
 		AD779A9E1D2F2A330043F11C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD779A9D1D2F2A330043F11C /* Foundation.framework */; };
 		AD779AA81D2F2A350043F11C /* LocationFaker.mm in Sources */ = {isa = PBXBuildFile; fileRef = AD779AA71D2F2A350043F11C /* LocationFaker.mm */; };
 		AD779AB31D2F2B2F0043F11C /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD779AB21D2F2B2F0043F11C /* CoreLocation.framework */; };
+		C24AFB971D34D7ED00342E55 /* OCTMenuController.h in Headers */ = {isa = PBXBuildFile; fileRef = C24AFB951D34D7ED00342E55 /* OCTMenuController.h */; };
+		C24AFB981D34D7ED00342E55 /* OCTMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = C24AFB961D34D7ED00342E55 /* OCTMenuController.m */; };
+		C24AFB9A1D34D82100342E55 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C24AFB991D34D82100342E55 /* UIKit.framework */; };
+		C24AFB9C1D34D86700342E55 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C24AFB9B1D34D86700342E55 /* CoreGraphics.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +26,10 @@
 		AD779AA71D2F2A350043F11C /* LocationFaker.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = LocationFaker.mm; sourceTree = "<group>"; };
 		AD779AAC1D2F2A350043F11C /* LocationFaker.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = LocationFaker.plist; path = Package/Library/MobileSubstrate/DynamicLibraries/LocationFaker.plist; sourceTree = "<group>"; };
 		AD779AB21D2F2B2F0043F11C /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		C24AFB951D34D7ED00342E55 /* OCTMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCTMenuController.h; sourceTree = "<group>"; };
+		C24AFB961D34D7ED00342E55 /* OCTMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCTMenuController.m; sourceTree = "<group>"; };
+		C24AFB991D34D82100342E55 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		C24AFB9B1D34D86700342E55 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,6 +37,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C24AFB9C1D34D86700342E55 /* CoreGraphics.framework in Frameworks */,
+				C24AFB9A1D34D82100342E55 /* UIKit.framework in Frameworks */,
 				AD779AB31D2F2B2F0043F11C /* CoreLocation.framework in Frameworks */,
 				AD779A9E1D2F2A330043F11C /* Foundation.framework in Frameworks */,
 			);
@@ -57,6 +67,8 @@
 		AD779A9C1D2F2A330043F11C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C24AFB9B1D34D86700342E55 /* CoreGraphics.framework */,
+				C24AFB991D34D82100342E55 /* UIKit.framework */,
 				AD779AB21D2F2B2F0043F11C /* CoreLocation.framework */,
 				AD779A9D1D2F2A330043F11C /* Foundation.framework */,
 			);
@@ -67,6 +79,8 @@
 			isa = PBXGroup;
 			children = (
 				AD779AA71D2F2A350043F11C /* LocationFaker.mm */,
+				C24AFB951D34D7ED00342E55 /* OCTMenuController.h */,
+				C24AFB961D34D7ED00342E55 /* OCTMenuController.m */,
 				AD779AA01D2F2A330043F11C /* Package */,
 				AD779AA41D2F2A330043F11C /* Supporting Files */,
 			);
@@ -131,6 +145,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C24AFB971D34D7ED00342E55 /* OCTMenuController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -207,6 +222,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD779AA81D2F2A350043F11C /* LocationFaker.mm in Sources */,
+				C24AFB981D34D7ED00342E55 /* OCTMenuController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -325,6 +341,7 @@
 				AD779AB11D2F2A350043F11C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

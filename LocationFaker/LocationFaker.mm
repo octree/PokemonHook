@@ -13,15 +13,18 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 #import <objc/runtime.h>
+#import "OCTMenuController.h"
 
 static float x = -1;
 static float y = -1;
-//static double speed = 0.000022523; // 2.5m/s
+static double speed = 0.000022523; // 2.5m/s
 static double speedX = 0.000192523;
 static double speedY = 0.00019;
 static double offsetX = 0;
 static double offsetY = 0;
 static int added = 0;
+static double timestamp = -1;
+static double runDistance = 0;
 
 @interface OCTControlView : UIView
 
@@ -40,7 +43,6 @@ static int added = 0;
     Method m2 = class_getInstanceMethod(self, @selector(coordinate_));
     
     method_exchangeImplementations(m1, m2);
-    
     if ([[NSUserDefaults standardUserDefaults] valueForKey:@"_fake_x"]) {
         x = [[[NSUserDefaults standardUserDefaults] valueForKey:@"_fake_x"] floatValue];
     };
@@ -56,8 +58,11 @@ static int added = 0;
     
     // 算与联合广场的坐标偏移量
     if (x == -1 && y == -1) {
-        x = pos.latitude - 37.7883923;
-        y = pos.longitude - (-122.4076413);
+        //        x = pos.latitude - 37.7883923;
+        //        y = pos.longitude - (-122.4076413);
+        //        悉尼歌剧院
+        x = pos.latitude - (-33.8577509);
+        y = pos.longitude - 151.2146436;
         
         [[NSUserDefaults standardUserDefaults] setValue:@(x) forKey:@"_fake_x"];
         [[NSUserDefaults standardUserDefaults] setValue:@(y) forKey:@"_fake_y"];
@@ -65,33 +70,48 @@ static int added = 0;
     }
     
     if (added == 0) {
-    
+        
         added = [[[OCTControlView alloc] init] addToWindow];
     }
     
-    return CLLocationCoordinate2DMake(pos.latitude - x + offsetX,
+    if (autorun) {
+        
+        if (timestamp == -1) {
+            
+            timestamp = [[NSDate date] timeIntervalSince1970];
+        }
+        
+        NSTimeInterval currts = [[NSDate date] timeIntervalSince1970];
+        NSTimeInterval interval = currts  - timestamp;
+        runDistance += interval * speed;
+        timestamp = currts;
+    }
+    
+    return CLLocationCoordinate2DMake(pos.latitude - x + offsetX - runDistance,
                                       pos.longitude - y + offsetY);
 }
 
 @end
 
 
-@interface OCTControlView ()
+@interface OCTControlView ()<OCTMenuControllerDelegate>
 
 @property (strong, nonatomic) UIButton *upButton;
 @property (strong, nonatomic) UIButton *downButton;
 @property (strong, nonatomic) UIButton *leftButton;
 @property (strong, nonatomic) UIButton *rightButton;
+@property (strong, nonatomic) UIButton *menuButton;
 
 @end
 
 @implementation OCTControlView
 
+#pragma mark - Life Cycle
 - (instancetype)init {
-
+    
     self = [super initWithFrame: CGRectMake(0, 20, 90, 90)];
     if (self) {
-    
+        
         self.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent: 0.5];
         [self configButtons];
     }
@@ -99,27 +119,28 @@ static int added = 0;
 }
 
 - (void)configButtons {
-
+    
     [self addSubview: self.upButton];
     [self addSubview: self.downButton];
     [self addSubview: self.leftButton];
     [self addSubview: self.rightButton];
+    [self addSubview: self.menuButton];
 }
 
 - (int)addToWindow {
-
+    
     UIWindow *window;
     
     for(UIWindow *elt in [UIApplication sharedApplication].windows) {
-    
-        if (elt.windowLevel == UIWindowLevelNormal) {
         
+        if (elt.windowLevel == UIWindowLevelNormal) {
+            
             window = elt;
         }
     }
     
     if (window == nil) {
-    
+        
         return 0;
     }
     
@@ -128,25 +149,51 @@ static int added = 0;
     return 1;
 }
 
-- (void)buttonTapped:(UIButton *)button {
+#pragma mark - OCTMenuControllerDelegate
 
+- (void)menu:(OCTMenuController *)menu autorunDidChanged:(BOOL) newValue {
+    
+    autorun = newValue;
+}
+
+- (void)menuResetButtonTapped:(OCTMenuController *)menu {
+    
+    offsetX = 0;
+    offsetY = 0;
+    x = -1;
+    y = -1;
+    timestamp = -1;
+    runDistance = 0;
+}
+
+#pragma mark - Action
+
+- (void)showMenu {
+    
+    OCTMenuController *vc = [[OCTMenuController alloc] init];
+    vc.delegate = self;
+    [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:vc animated:YES completion:nil];
+}
+
+- (void)buttonTapped:(UIButton *)button {
+    
     switch (button.tag) {
             
         case 0:
-//            up
+            //            up
             offsetX += speedX;
             break;
         case 1:
             
-//            down
+            //            down
             offsetX -= speedX;
             break;
         case 2:
-//            left
+            //            left
             offsetY -= speedY;
             break;
         case 3:
-//            right
+            //            right
             offsetY += speedY;
             break;
             
@@ -155,16 +202,18 @@ static int added = 0;
     }
 }
 
+#pragma mark - Accessor
 - (UIButton *)upButton {
-
-    if (!_upButton) {
     
+    if (!_upButton) {
+        
         _upButton = [UIButton buttonWithType:UIButtonTypeSystem];
         [_upButton setTitle:@"▲" forState: UIControlStateNormal];
         _upButton.frame = CGRectMake(30, 0, 30, 30);
         _upButton.tag = 0;
         _upButton.titleLabel.font = [UIFont systemFontOfSize: 25];
         [_upButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [_upButton setTitleColor:[UIColor whiteColor] forState: UIControlStateHighlighted];
     }
     
     return _upButton;
@@ -180,6 +229,7 @@ static int added = 0;
         _downButton.tag = 1;
         _downButton.titleLabel.font = [UIFont systemFontOfSize: 25];
         [_downButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [_downButton setTitleColor:[UIColor whiteColor] forState: UIControlStateHighlighted];
     }
     
     return _downButton;
@@ -195,10 +245,14 @@ static int added = 0;
         _leftButton.tag = 2;
         _leftButton.titleLabel.font = [UIFont systemFontOfSize: 25];
         [_leftButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [_leftButton setTitleColor:[UIColor whiteColor] forState: UIControlStateHighlighted];
     }
+    
     
     return _leftButton;
 }
+
+
 
 - (UIButton *)rightButton {
     
@@ -210,13 +264,26 @@ static int added = 0;
         _rightButton.tag = 3;
         _rightButton.titleLabel.font = [UIFont systemFontOfSize: 25];
         [_rightButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [_rightButton setTitleColor:[UIColor whiteColor] forState: UIControlStateHighlighted];
     }
     
     return _rightButton;
 }
 
+
+- (UIButton *)menuButton {
+    
+    if (!_menuButton) {
+        
+        _menuButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        [_menuButton setTitle:@"◉" forState: UIControlStateNormal];
+        _menuButton.frame = CGRectMake(30, 30, 30, 30);
+        _menuButton.titleLabel.font = [UIFont systemFontOfSize: 25];
+        [_menuButton addTarget:self action:@selector(showMenu) forControlEvents:UIControlEventTouchUpInside];
+        [_menuButton setTitleColor:[UIColor whiteColor] forState: UIControlStateHighlighted];
+    }
+    
+    return _menuButton;
+}
+
 @end
-
-
-
-
